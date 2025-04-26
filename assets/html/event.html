@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Blog - Yupifiestas</title>
+  <link rel="stylesheet" href="../css/event.css">
+  <link rel="stylesheet" href="../css/header.css">
+  <link rel="stylesheet" href="../css/footer.css">
+  <script src="../js/header.js" defer></script>
+  <script src="../js/footer.js" defer></script>
+  <script src="../js/script.js" defer></script>
+</head>
+
+<body>
+  <div id="header"></div>
+  <section class="eventos-section">
+    <div class="evento">
+      <!-- Lado izquierdo: video -->
+      <div class="evento-media">
+        <video src="../img/castillos/castillo_fiesta.mp4" controls class="evento-video"></video>
+      </div>
+
+      <!-- Lado derecho: texto + galería -->
+      <div class="evento-info">
+        <h2>🎭 Despedidas de Soltero/a Inolvidables</h2>
+        <p>
+          Vive una experiencia única para celebrar tu despedida. En Yupifiestas organizamos eventos
+          divertidos y diferentes con castillos hinchables especiales para adultos, animación, música,
+          bebidas y sorpresas que no olvidarás.
+        </p>
+        <ul>
+          <li>🎉 Castillos hinchables XXL para adultos</li>
+          <li>🎧 DJ y animador en vivo</li>
+          <li>📸 Photocall con disfraces</li>
+          <li>🍹 Pack de bebidas y cócteles</li>
+          <li>🎁 Regalo sorpresa para el/la protagonista</li>
+        </ul>
+
+        <!-- Carrusel pequeño -->
+        <div class="evento-carrusel">
+          <h3>📸 Galería de Despedidas</h3>
+          <div class="carousel-pequeno">
+            <img src="../img/castillos/patrulla.jpg" alt="Despedida 1" class="zoomable">
+            <img src="../img/castillos/patrulla.jpg" alt="Despedida 2" class="zoomable">
+            <img src="../img/castillos/patrulla.jpg" alt="Despedida 3" class="zoomable">
+            <img src="../img/castillos/patrulla.jpg" alt="Despedida 3" class="zoomable">
+          </div>
+        </div>
+        <!-- Lightbox: visor grande -->
+
+        <a href="#reserva" class="btn-reservar">¡Reserva tu fiesta ahora!</a>
+      </div>
+      <div class="evento-media">
+        <video src="../img/castillos/castillo_agua2.mp4" controls class="evento-video"></video>
+      </div>
+
+      <div class="evento-info">
+        <h2>🎂 Fiestas de Cumpleaños Increíbles</h2>
+        <p>
+          Celebra un cumpleaños inolvidable con castillos hinchables, animación, y muchas sorpresas.
+          ¡Perfecto para todas las edades!
+        </p>
+        <ul>
+          <li>🎈 Castillos adaptados para niños</li>
+          <li>🎤 Animadores y juegos dinámicos</li>
+          <li>🍭 Mesa dulce personalizada</li>
+          <li>🎁 Regalos para todos los peques</li>
+          <li>📸 Fotos divertidas con disfraces</li>
+        </ul>
+
+        <div class="evento-carrusel">
+          <h3>📸 Galería de Cumpleaños</h3>
+          <div class="carousel-pequeno">
+            <img src="../img/castillos/cumple1.jpg" alt="Cumpleaños 1" class="zoomable">
+            <img src="../img/castillos/cumple2.jpg" alt="Cumpleaños 2" class="zoomable">
+            <img src="../img/castillos/cumple3.jpg" alt="Cumpleaños 3" class="zoomable">
+          </div>
+        </div>
+
+        <div id="lightbox" class="lightbox hidden">
+          <span class="close-lightbox">&times;</span>
+          <img class="lightbox-img" src="" alt="Imagen ampliada" />
+        </div>
+
+        <a href="#reserva" class="btn-reservar">¡Reserva tu fiesta ahora!</a>
+      </div>
+    </div>
+  </section>
+
+  <div id="footer"></div>
+</body>
+
+</html>
