@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (header) {
         header.innerHTML = data;
         initMenuToggle();
-        initScrollToFooter();
+        initContactoLinks();
       }
     });
 
@@ -18,7 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(res => res.text())
     .then(data => {
       const footer = document.getElementById("footer");
-      if (footer) footer.innerHTML = data;
+      if (footer) {
+        footer.innerHTML = data;
+      }
     });
 
   // === MENÚ DESPLEGABLE ===
@@ -32,20 +34,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // === ENLACE "CONTACTO" ===
-  function initScrollToFooter() {
-    const contactoLink = document.querySelector('a[href="#contacto"]');
-    if (contactoLink) {
-      contactoLink.addEventListener('click', function (e) {
+  // === ENLACE(S) A "CONTACTO" ===
+  function initContactoLinks() {
+    const contactoLinks = document.querySelectorAll('a[href="#contacto"]');
+    contactoLinks.forEach(link => {
+      link.addEventListener('click', function (e) {
         e.preventDefault();
-        const footer = document.getElementById('contacto');
-        if (footer) {
-          footer.scrollIntoView({ behavior: 'smooth' });
+        const contactoSection = document.getElementById('contacto');
+        if (contactoSection) {
+          contactoSection.scrollIntoView({ behavior: 'smooth' });
         } else {
-          window.location.href = '/index.html#contacto';
+          window.location.href = `${basePath}../index.html#contacto`;
         }
       });
-    }
+    });
   }
 
   // === CARRUSEL ===
