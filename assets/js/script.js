@@ -63,36 +63,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ================= HEADER =================
-  fetch('assets/html/header.html')
-    .then(res => res.text())
-    .then(data => {
-      const header = document.getElementById('header');
-      if (header) {
-        header.innerHTML = data;
-        const menuToggle = document.getElementById('menu-toggle');
-        const navLinks = document.getElementById('nav-links');
-        if (menuToggle && navLinks) {
-          menuToggle.addEventListener('click', () => navLinks.classList.toggle('active'));
-        }
-        highlightCurrentPage();
-        initContactoLinks();
-      }
-    });
-
-  // ================= FOOTER =================
-  fetch('footer.html')
-    .then(res => res.text())
-    .then(data => {
-      const footer = document.getElementById('footer');
-      if (footer) {
-        footer.innerHTML = data;
-        initSocialButtons();
-        loadFontAwesome();
-      }
-    });
-
-  // ================= OTRAS FUNCIONES =================
   function highlightCurrentPage() {
     const currentPage = location.pathname.split('/').pop().replace('.html', '') || 'index';
     document.querySelectorAll('#nav-links a').forEach(link => {
@@ -186,4 +156,10 @@ document.addEventListener('DOMContentLoaded', () => {
       video.style.transform = 'scale(1)';
     });
   });
+
+  // ================= INICIALIZAR FUNCIONES =================
+  initSocialButtons();
+  loadFontAwesome();
+  highlightCurrentPage();
+  initContactoLinks();
 });
