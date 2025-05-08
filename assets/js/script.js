@@ -203,10 +203,6 @@ document.addEventListener('DOMContentLoaded', () => {
           card.style.transform = 'scale(1)';
       });
 
-      card.addEventListener('click', (e) => {
-          e.preventDefault();
-          alert('Detalles del castillo próximamente disponibles.');
-      });
   });
 
   // ================= INICIALIZAR FUNCIONES =================
