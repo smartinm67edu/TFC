@@ -193,17 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
   /**
    * Efectos para tarjetas de castillos
    */
-  document.querySelectorAll('.castillo-card').forEach(card => {
-      card.addEventListener('mouseenter', () => {
-          card.style.transform = 'scale(1.05)';
-          card.style.transition = 'transform 0.3s ease';
-          playHoverSound();
-      });
-      card.addEventListener('mouseleave', () => {
-          card.style.transform = 'scale(1)';
-      });
-
-  });
+  
 
   // ================= INICIALIZAR FUNCIONES =================
   initSocialButtons();
