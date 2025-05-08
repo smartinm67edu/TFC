@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+
   // ================= UTILIDADES =================
   function loadFontAwesome() {
     if (!document.querySelector('link[href*="font-awesome"]')) {
@@ -28,11 +29,31 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // ================= CASTILLOS HINCHABLES =================
+  if (window.location.pathname.endsWith('/index.html') || window.location.pathname.endsWith('/')) {
+    document.querySelectorAll('.castillo-card').forEach(card => {
+      card.style.transition = 'transform 0.3s ease, box-shadow 0.3s ease';
+
+      card.addEventListener('mouseenter', () => {
+        card.style.transform = 'scale(1.07) rotate(3deg)';
+        card.style.boxShadow = '0 10px 20px rgba(0,0,0,0.3)';
+        playHoverSound();
+      });
+
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'scale(1) rotate(0deg)';
+        card.style.boxShadow = 'none';
+      });
+    });
+  }
+
+  // ================= SOCIAL BUTTONS =================
   function initSocialButtons() {
     const socialButtons = document.querySelectorAll('.social-btn');
     socialButtons.forEach(button => {
       button.addEventListener('click', function (e) {
         e.preventDefault();
+
         const wave = document.createElement('span');
         wave.className = 'wave-effect';
         wave.style.cssText = `
@@ -44,12 +65,14 @@ document.addEventListener('DOMContentLoaded', () => {
           animation: wave 0.6s linear;
           z-index: 0;
         `;
+
         const rect = button.getBoundingClientRect();
         const size = Math.max(rect.width, rect.height) * 1.5;
         wave.style.width = `${size}px`;
         wave.style.height = `${size}px`;
         wave.style.left = `${e.clientX - rect.left - size / 2}px`;
         wave.style.top = `${e.clientY - rect.top - size / 2}px`;
+
         button.appendChild(wave);
 
         setTimeout(() => wave.remove(), 600);
@@ -63,6 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // ================= HIGHLIGHT CURRENT PAGE =================
   function highlightCurrentPage() {
     const currentPage = location.pathname.split('/').pop().replace('.html', '') || 'index';
     document.querySelectorAll('#nav-links a').forEach(link => {
@@ -73,9 +97,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // ================= CONTACTO LINKS =================
   function initContactoLinks() {
     const basePath = window.location.pathname.endsWith('/index.html') || window.location.pathname.endsWith('/')
       ? './' : '../';
+
     document.querySelectorAll('a[href="#contacto"]').forEach(link => {
       link.addEventListener('click', function (e) {
         e.preventDefault();
@@ -89,77 +115,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ================= FUNCIONALIDADES GLOBALES =================
-  const track = document.querySelector('.carousel-track');
-  const nextBtn = document.querySelector('.carousel-btn.next');
-  const prevBtn = document.querySelector('.carousel-btn.prev');
-  let carouselIndex = 0;
-
-  if (track && nextBtn && prevBtn) {
-    const updateCarousel = () => {
-      track.style.transform = `translateX(-${carouselIndex * 100}%)`;
-    };
-    nextBtn.addEventListener('click', () => {
-      carouselIndex = (carouselIndex + 1) % track.children.length;
-      updateCarousel();
-    });
-    prevBtn.addEventListener('click', () => {
-      carouselIndex = (carouselIndex - 1 + track.children.length) % track.children.length;
-      updateCarousel();
-    });
-  }
-
-  const zoomables = document.querySelectorAll('.zoomable');
-  const lightbox = document.getElementById('lightbox');
-  const lightboxImg = document.querySelector('.lightbox-img');
-  const closeBtn = document.querySelector('.close-lightbox');
-
-  if (lightbox && lightboxImg && closeBtn) {
-    zoomables.forEach(img => {
-      img.addEventListener('click', () => {
-        lightboxImg.src = img.src;
-        lightbox.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-      });
-    });
-
-    const closeLightbox = () => {
-      lightbox.classList.add('hidden');
-      lightboxImg.src = '';
-      document.body.style.overflow = '';
-    };
-
-    closeBtn.addEventListener('click', closeLightbox);
-    lightbox.addEventListener('click', e => {
-      if (e.target === lightbox) closeLightbox();
-    });
-  }
-
-  const elementosAnimables = document.querySelectorAll('.evento, .blog-post');
-  const observer = new IntersectionObserver((entries, obs) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        obs.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.1 });
-  elementosAnimables.forEach(el => observer.observe(el));
-
-  const videos = document.querySelectorAll('.evento-video, .pack-video');
-  videos.forEach(video => {
-    video.addEventListener('mouseenter', () => {
-      video.style.transform = 'scale(1.03)';
-      video.style.transition = 'transform 0.3s ease';
-    });
-    video.addEventListener('mouseleave', () => {
-      video.style.transform = 'scale(1)';
-    });
-  });
-
   // ================= INICIALIZAR FUNCIONES =================
-  initSocialButtons();
   loadFontAwesome();
+  initSocialButtons();
   highlightCurrentPage();
   initContactoLinks();
 });
