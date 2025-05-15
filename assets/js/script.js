@@ -1,9 +1,37 @@
 document.addEventListener('DOMContentLoaded', () => {
   // ================= UTILIDADES =================
   
-  /**
-   * Carga Font Awesome dinámicamente si no está ya cargado
-   */
+  // ================= MENÚ DESPLEGABLE =================
+function initMenuToggle() {
+  const menuToggle = document.getElementById('menu-toggle');
+  const navLinks = document.getElementById('nav-links');
+
+  if (!menuToggle || !navLinks) return;
+
+  // Alternar visibilidad del menú
+  menuToggle.addEventListener('click', () => {
+    navLinks.classList.toggle('active');
+    menuToggle.textContent = navLinks.classList.contains('active') ? '✕' : '☰';
+  });
+
+  // Cerrar menú al hacer clic en un enlace (en móviles)
+  const closeMenu = () => {
+    navLinks.classList.remove('active');
+    menuToggle.textContent = '☰';
+  };
+
+  navLinks.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', closeMenu);
+  });
+
+  // Cerrar menú si se redimensiona a escritorio
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 768) {
+      closeMenu();
+    }
+  });
+}
+
   function loadFontAwesome() {
       if (!document.querySelector('link[href*="font-awesome"]')) {
           const link = document.createElement('link');
@@ -201,6 +229,8 @@ document.addEventListener('DOMContentLoaded', () => {
   loadFontAwesome();
   highlightCurrentPage();
   initContactoLinks();
+  initMenuToggle();
+
 
   // Configuración de Firebase - Reemplaza con tus propios datos
         const firebaseConfig = {
