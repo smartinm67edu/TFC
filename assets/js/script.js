@@ -190,6 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   });
 
+
   /**
    * Efectos para tarjetas de castillos
    */
@@ -200,4 +201,153 @@ document.addEventListener('DOMContentLoaded', () => {
   loadFontAwesome();
   highlightCurrentPage();
   initContactoLinks();
+
+  // Configuración de Firebase - Reemplaza con tus propios datos
+        const firebaseConfig = {
+            apiKey: "TU_API_KEY",
+            authDomain: "TU_PROYECTO.firebaseapp.com",
+            projectId: "TU_PROYECTO",
+            storageBucket: "TU_PROYECTO.appspot.com",
+            messagingSenderId: "TU_SENDER_ID",
+            appId: "TU_APP_ID"
+        };
+
+        // Inicializa Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        // Referencias a elementos del DOM
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const authContainer = document.getElementById('auth-container');
+        const userInfo = document.getElementById('user-info');
+        const userName = document.getElementById('user-name');
+        const userEmail = document.getElementById('user-email');
+        const showRegister = document.getElementById('show-register');
+        const showLogin = document.getElementById('show-login');
+        const loginBtn = document.getElementById('login-btn');
+        const registerBtn = document.getElementById('register-btn');
+        const googleLoginBtn = document.getElementById('google-login-btn');
+        const googleRegisterBtn = document.getElementById('google-register-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+
+        // Mostrar/ocultar formularios
+        showRegister.addEventListener('click', () => {
+            loginForm.style.display = 'none';
+            registerForm.style.display = 'block';
+        });
+
+        showLogin.addEventListener('click', () => {
+            registerForm.style.display = 'none';
+            loginForm.style.display = 'block';
+        });
+
+        // Función para login con email y contraseña
+        loginBtn.addEventListener('click', () => {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            auth.signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    // Login exitoso
+                    showUserInfo(userCredential.user);
+                })
+                .catch((error) => {
+                    alert(error.message);
+                });
+        });
+
+        // Función para registro con email y contraseña
+        registerBtn.addEventListener('click', () => {
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-confirm-password').value;
+
+            if (password !== confirmPassword) {
+                alert('Las contraseñas no coinciden');
+                return;
+            }
+
+            auth.createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    // Registro exitoso
+                    showUserInfo(userCredential.user);
+                })
+                .catch((error) => {
+                    alert(error.message);
+                });
+        });
+
+        // Función para login con Google
+        const loginWithGoogle = () => {
+            const provider = new firebase.auth.GoogleAuthProvider();
+
+            auth.signInWithPopup(provider)
+                .then((result) => {
+                    // Login con Google exitoso
+                    showUserInfo(result.user);
+                })
+                .catch((error) => {
+                    alert(error.message);
+                });
+        };
+
+        googleLoginBtn.addEventListener('click', loginWithGoogle);
+        googleRegisterBtn.addEventListener('click', loginWithGoogle);
+
+        // Función para cerrar sesión
+        logoutBtn.addEventListener('click', () => {
+            auth.signOut()
+                .then(() => {
+                    authContainer.style.display = 'block';
+                    userInfo.style.display = 'none';
+                })
+                .catch((error) => {
+                    alert(error.message);
+                });
+        });
+
+        // Función para mostrar información del usuario
+        const showUserInfo = (user) => {
+            authContainer.style.display = 'none';
+            userInfo.style.display = 'block';
+            userName.textContent = user.displayName || user.email;
+            userEmail.textContent = user.email;
+        };
+
+        // Observador de estado de autenticación
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                // Usuario logueado
+                showUserInfo(user);
+            } else {
+                // Usuario no logueado
+                authContainer.style.display = 'block';
+                userInfo.style.display = 'none';
+            }
+        });
+        // Función para mostrar/ocultar contraseña
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const toggle = document.querySelector(`[onclick="togglePassword('${inputId}')"]`);
+
+            if (input.type === "password") {
+                input.type = "text";
+                toggle.parentElement.classList.add("password-visible");
+            } else {
+                input.type = "password";
+                toggle.parentElement.classList.remove("password-visible");
+            }
+        }
+
+        // También puedes añadir esto al observer de Firebase para resetear los campos
+        auth.onAuthStateChanged((user) => {
+            if (!user) {
+                document.querySelectorAll('input[type="text"][id*="password"]').forEach(input => {
+                    input.type = "password";
+                    input.parentElement.classList.remove("password-visible");
+                });
+            }
+        });
 });
+
