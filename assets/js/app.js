@@ -1,5 +1,6 @@
 // Configuración de MongoDB
-const API_BASE_URL = 'http://tu-api.com'; // Reemplazar con tu endpoint
+const API_BASE_URL = 'http://localhost:5000';
+
 
 // Variables globales
 let currentReservationId = null;

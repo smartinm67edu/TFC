@@ -1,0 +1,50 @@
+:root {
+            --primary: #4e73df;
+            --success: #1cc88a;
+            --danger: #e74a3b;
+            --warning: #f6c23e;
+            --info: #36b9cc;
+            --dark: #5a5c69;
+        }
+        
+        .castle-card {
+            border-left: 4px solid var(--primary);
+        }
+        
+        .event-card {
+            border-left: 4px solid var(--info);
+        }
+        
+        .status-badge {
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .badge-available {
+            background-color: rgba(28, 200, 138, 0.1);
+            color: var(--success);
+        }
+        
+        .badge-reserved {
+            background-color: rgba(231, 74, 59, 0.1);
+            color: var(--danger);
+        }
+        
+        .reservation-row:hover {
+            background-color: #f8f9fa;
+            cursor: pointer;
+        }
+        
+        #reservationsTable tbody tr {
+            transition: all 0.2s;
+        }
+        
+        .action-btn {
+            opacity: 0.8;
+            transition: all 0.2s;
+        }
+        
+        .action-btn:hover {
+            opacity: 1;
+            transform: scale(1.05);
+        }
