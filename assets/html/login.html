@@ -1,108 +1,77 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Autenticación con Firebase</title>
-    <link rel="stylesheet" href="../css/login.css">
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-    <script src="../js/script.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Autenticación con Firebase</title>
+  <link rel="stylesheet" href="../css/login.css" />
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <script src="../js/script.js" defer></script>
 </head>
-
 <body>
-    <header>
-        <div class="header-window">
-            <div class="container-header">
-                <div class="logo-title">
-                    <a href="../../index.html">
-                        <img src="../img/logos/logoyupi.jpg" alt="Logo">
-                    </a>
-                    <h4>Yupifiestas</h4>
-                    <label class="icon-menu" id="menu-toggle">☰</label>
-                </div>
-            </div>
-            <nav class="nav">
-                <ul class="nav-links" id="nav-links">
-                </ul>
-            </nav>
+  <header>
+    <div class="header-window">
+      <div class="container-header">
+        <div class="logo-title">
+          <a href="../../index.html">
+            <img src="../img/logos/logoyupi.jpg" alt="Logo" />
+          </a>
+          <h4>Yupifiestas</h4>
+          <label class="icon-menu" id="menu-toggle">☰</label>
         </div>
-    </header>
-    <section id="login-section">
-        <div id="auth-container">
-            <!-- Formulario de Login -->
-            <div id="login-form">
-                <h2>Iniciar Sesión</h2>
-                <form>
-                    <div>
-                        <label for="login-email">Email:</label>
-                        <input type="email" id="login-email" required>
-                    </div>
-                    <div>
-                        <label for="login-password">Contraseña:</label>
-                        <input type="password" id="login-password" required>
-                    </div>
-                    <button type="button" id="login-btn">Iniciar Sesión</button>
-                    <button type="button" id="google-login-btn">Iniciar con Google</button>
-                </form>
-                <p>¿No tienes cuenta? <a href="#" id="show-register">Regístrate aquí</a></p>
-            </div>
+      </div>
+      <nav class="nav">
+        <ul class="nav-links" id="nav-links"></ul>
+      </nav>
+    </div>
+  </header>
 
-            <!-- Formulario de Registro -->
-            <div id="register-form" style="display:none;">
-                <h2>Registrarse</h2>
-                <form>
-                    <div>
-                        <label for="register-email">Email:</label>
-                        <input type="email" id="register-email" required>
-                    </div>
-                    <div class="password-container">
-                        <label for="register-password">Contraseña:</label>
-                        <div class="input-with-icon">
-                            <input type="password" id="register-password" required>
-                            <span class="toggle-password" onclick="togglePassword('register-password')">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round">
-                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                    <circle cx="12" cy="12" r="3"></circle>
-                                </svg>
-                            </span>
-                        </div>
-                    </div>
+  <section id="login-section">
+    <div id="auth-container">
+      <!-- Login -->
+      <div id="login-form">
+        <h2>Iniciar Sesión</h2>
+        <form>
+          <label for="login-email">Email:</label>
+          <input type="email" id="login-email" required />
 
-                    <div class="password-container">
-                        <label for="register-confirm-password">Confirmar Contraseña:</label>
-                        <div class="input-with-icon">
-                            <input type="password" id="register-confirm-password" required>
-                            <span class="toggle-password" onclick="togglePassword('register-confirm-password')">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round">
-                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                    <circle cx="12" cy="12" r="3"></circle>
-                                </svg>
-                            </span>
-                        </div>
-                    </div>
-                    <button type="button" id="register-btn">Registrarse</button>
-                    <button type="button" id="google-login-btn" class="google-btn">
-                        <span>Iniciar con Google</span>
-                    </button>
+          <label for="login-password">Contraseña:</label>
+          <input type="password" id="login-password" required />
 
-                </form>
-                <p>¿Ya tienes cuenta? <a href="#" id="show-login">Inicia sesión aquí</a></p>
-            </div>
-        </div>
+          <button type="button" id="login-btn">Iniciar Sesión</button>
+          <button type="button" id="google-login-btn">Iniciar con Google</button>
+        </form>
+        <p>¿No tienes cuenta? <a href="#" id="show-register">Regístrate aquí</a></p>
+      </div>
 
-        <div id="user-info" style="display:none;">
-            <h2>Bienvenido, <span id="user-name"></span></h2>4
-            <p>Email: <span id="user-email"></span></p>
-            <button id="logout-btn">Cerrar Sesión</button>
-        </div>
-    </section>
+      <!-- Registro -->
+      <div id="register-form" style="display: none;">
+        <h2>Registrarse</h2>
+        <form>
+          <label for="register-email">Email:</label>
+          <input type="email" id="register-email" required />
 
+          <label for="register-password">Contraseña:</label>
+          <input type="password" id="register-password" required />
+
+          <label for="register-confirm-password">Confirmar Contraseña:</label>
+          <input type="password" id="register-confirm-password" required />
+
+          <button type="button" id="register-btn">Registrarse</button>
+          <button type="button" id="google-register-btn" class="google-btn">
+            <span>Iniciar con Google</span>
+          </button>
+        </form>
+        <p>¿Ya tienes cuenta? <a href="#" id="show-login">Inicia sesión aquí</a></p>
+      </div>
+    </div>
+
+    <div id="user-info" style="display: none;">
+      <h2>Bienvenido, <span id="user-name"></span></h2>
+      <p>Email: <span id="user-email"></span></p>
+      <button id="logout-btn">Cerrar Sesión</button>
+    </div>
+  </section>
 </body>
-
 </html>
