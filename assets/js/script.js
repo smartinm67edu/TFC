@@ -232,37 +232,22 @@ document.addEventListener('DOMContentLoaded', () => {
     initMenuToggle();
 
 
-    // Configuración de Firebase
-    const firebaseConfig = {
-        apiKey: "AIzaSyCuMvxncv2EZnAjAudYJRfgx2eODw5_uqg",
-        authDomain: "yupifiestas-7365a.firebaseapp.com",
-        projectId: "yupifiestas-7365a",
-        storageBucket: "yupifiestas-7365a.firebasestorage.app",
-        messagingSenderId: "750235343948",
-        appId: "1:750235343948:web:8eb34a4cea5b8535f628e9",
-        measurementId: "G-BWGVS6VTYE"
-    };
+    // ==================== AUTENTICACIÓN CON MONGO ATLAS ====================
 
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-
-
-    // Referencias a elementos del DOM
+    const loginBtn = document.getElementById('login-btn');
+    const registerBtn = document.getElementById('register-btn');
+    const logoutBtn = document.getElementById('logout-btn');
+    const showRegister = document.getElementById('show-register');
+    const showLogin = document.getElementById('show-login');
     const loginForm = document.getElementById('login-form');
     const registerForm = document.getElementById('register-form');
     const authContainer = document.getElementById('auth-container');
     const userInfo = document.getElementById('user-info');
     const userName = document.getElementById('user-name');
     const userEmail = document.getElementById('user-email');
-    const showRegister = document.getElementById('show-register');
-    const showLogin = document.getElementById('show-login');
-    const loginBtn = document.getElementById('login-btn');
-    const registerBtn = document.getElementById('register-btn');
-    const googleLoginBtn = document.getElementById('google-login-btn');
-    const googleRegisterBtn = document.getElementById('google-register-btn');
-    const logoutBtn = document.getElementById('logout-btn');
 
-    // Mostrar/ocultar formularios
+    const ADMIN_EMAIL = "admin@yupifiestas.es";
+
     showRegister.addEventListener('click', () => {
         loginForm.style.display = 'none';
         registerForm.style.display = 'block';
@@ -273,23 +258,41 @@ document.addEventListener('DOMContentLoaded', () => {
         loginForm.style.display = 'block';
     });
 
-    // Función para login con email y contraseña
-    loginBtn.addEventListener('click', () => {
+    loginBtn.addEventListener('click', async () => {
         const email = document.getElementById('login-email').value;
         const password = document.getElementById('login-password').value;
 
-        auth.signInWithEmailAndPassword(email, password)
-            .then((userCredential) => {
-                // Login exitoso
-                showUserInfo(userCredential.user);
-            })
-            .catch((error) => {
-                alert(error.message);
+        try {
+            const res = await fetch('http://localhost:5000/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
             });
+            const data = await res.json();
+
+            if (!res.ok) {
+                alert(data.message || 'Error al iniciar sesión');
+                return;
+            }
+
+            sessionStorage.setItem('user', JSON.stringify(data.user));
+            showUserInfo(data.user);
+
+            if (data.user.email === ADMIN_EMAIL) {
+                document.body.classList.add('admin');
+            } else {
+                document.body.classList.remove('admin');
+            }
+
+            window.location.href = "../../html/reservas.html"; // ajusta si es necesario
+
+        } catch (err) {
+            alert('Error de conexión al servidor');
+            console.error(err);
+        }
     });
 
-    // Función para registro con email y contraseña
-    registerBtn.addEventListener('click', () => {
+    registerBtn.addEventListener('click', async () => {
         const email = document.getElementById('register-email').value;
         const password = document.getElementById('register-password').value;
         const confirmPassword = document.getElementById('register-confirm-password').value;
@@ -299,100 +302,47 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        auth.createUserWithEmailAndPassword(email, password)
-            .then((userCredential) => {
-                // Registro exitoso
-                showUserInfo(userCredential.user);
-            })
-            .catch((error) => {
-                alert(error.message);
+        try {
+            const res = await fetch('http://localhost:5000/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
             });
-    });
 
-    // Función para login con Google
-    const loginWithGoogle = () => {
-        const provider = new firebase.auth.GoogleAuthProvider();
-
-        auth.signInWithPopup(provider)
-            .then((result) => {
-                // Login con Google exitoso
-                showUserInfo(result.user);
-            })
-            .catch((error) => {
-                alert(error.message);
-            });
-    };
-
-    googleLoginBtn.addEventListener('click', loginWithGoogle);
-    googleRegisterBtn.addEventListener('click', loginWithGoogle);
-
-    // Función para cerrar sesión
-    logoutBtn.addEventListener('click', () => {
-        auth.signOut()
-            .then(() => {
-                authContainer.style.display = 'block';
-                userInfo.style.display = 'none';
-            })
-            .catch((error) => {
-                alert(error.message);
-            });
-    });
-
-    // Función para mostrar información del usuario
-    const showUserInfo = (user) => {
-        authContainer.style.display = 'none';
-        userInfo.style.display = 'block';
-        userName.textContent = user.displayName || user.email;
-        userEmail.textContent = user.email;
-    };
-
-    const ADMIN_EMAIL = "admin@yupifiestas.es";
-
-    auth.onAuthStateChanged(async (user) => {
-        if (user) {
-            showUserInfo(user);
-
-            if (user.email === ADMIN_EMAIL) {
-                document.body.classList.add("admin");
-            } else {
-                document.body.classList.remove("admin");
+            const data = await res.json();
+            if (!res.ok) {
+                alert(data.message || 'Error en el registro');
+                return;
             }
 
-            try {
-                const res = await fetch('http://localhost:5000/users/find', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: user.email })
-                });
-
-                if (res.status === 404) {
-                    await fetch('http://localhost:5000/users', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            email: user.email,
-                            role: user.email === ADMIN_EMAIL ? 'admin' : 'user'
-                        })
-                    });
-                    console.log('✅ Usuario creado en MongoDB');
-                } else {
-                    console.log('ℹ️ Usuario ya existía en MongoDB');
-                }
-
-                // ✅ Redirigir a página de reservas
-                window.location.href = "../../html/reservas.html"; // cambia la ruta si es otra
-
-            } catch (error) {
-                console.error('❌ Error al sincronizar usuario con MongoDB:', error);
-            }
-
-        } else {
-            authContainer.style.display = 'block';
-            userInfo.style.display = 'none';
-            document.body.classList.remove("admin");
+            alert('✅ Usuario registrado, ahora puedes iniciar sesión');
+            showLogin.click();
+        } catch (err) {
+            alert('Error de conexión al servidor');
+            console.error(err);
         }
     });
 
+    logoutBtn.addEventListener('click', () => {
+        sessionStorage.removeItem('user');
+        location.reload();
+    });
 
+    const showUserInfo = (user) => {
+        authContainer.style.display = 'none';
+        userInfo.style.display = 'block';
+        userName.textContent = user.email;
+        userEmail.textContent = user.email;
+    };
+
+    // ✅ Detectar sesión activa desde sessionStorage
+    const storedUser = sessionStorage.getItem('user');
+    if (storedUser) {
+        const user = JSON.parse(storedUser);
+        showUserInfo(user);
+        if (user.email === ADMIN_EMAIL) {
+            document.body.classList.add('admin');
+        }
+    }
 });
 

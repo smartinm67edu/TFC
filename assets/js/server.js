@@ -2,13 +2,14 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const bcrypt = require('bcrypt'); // 🔐 para contraseñas
 require('dotenv').config();
 
 const Castle = require('./castle');
 const Event = require('./event');
 const Reservation = require('./reservation');
-const User = require('./user'); // ✅ Importar modelo de usuarios
-const { encrypt } = require('./utils/encryption'); // ✅ Para buscar usuarios por email
+const User = require('./user');
+const { encrypt } = require('./utils/encryption');
 
 const app = express();
 app.use(cors());
@@ -101,6 +102,40 @@ app.post('/users/find', async (req, res) => {
     res.json(user);
   } catch (err) {
     res.status(500).json({ error: 'Error al buscar usuario', details: err });
+  }
+});
+
+// ===================== AUTH (MONGO) =====================
+
+// REGISTRO
+app.post('/auth/register', async (req, res) => {
+  const { email, password, role = 'user' } = req.body;
+  try {
+    const existing = await User.findOne({ email });
+    if (existing) return res.status(400).json({ message: 'Usuario ya registrado' });
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new User({ email, password: hashedPassword, role });
+    await user.save();
+    res.status(201).json({ message: 'Usuario registrado correctamente' });
+  } catch (err) {
+    res.status(500).json({ error: 'Error en el registro', details: err });
+  }
+});
+
+// LOGIN
+app.post('/auth/login', async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(401).json({ message: 'Contraseña incorrecta' });
+
+    res.json({ message: 'Login exitoso', user: { email: user.email, role: user.role } });
+  } catch (err) {
+    res.status(500).json({ error: 'Error en el login', details: err });
   }
 });
 
