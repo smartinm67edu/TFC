@@ -12,7 +12,7 @@ const reservationSchema = new mongoose.Schema({
   notes: String
 }, { timestamps: true });
 
-// Middleware: marcar item como no disponible si se crea reserva confirmada
+// Middleware: si la reserva se confirma, marcar el castillo o evento como no disponible
 reservationSchema.post('save', async function (doc) {
   if (doc.status === 'confirmed') {
     const Model = doc.itemType === 'castle' ? require('./castle') : require('./event');
